@@ -29,6 +29,10 @@
 | TRAP-15 | 检验单位换算 | 静默错算或证据丢失 | 以可复核规则显式处理 | `app/modules/protocol/rules.py` | `tests/test_protocol.py::test_unit_conversion_real` |
 | TRAP-23 | 访视窗末端 | 静默错算或证据丢失 | 以可复核规则显式处理 | `app/modules/windows/rules.py` | `tests/test_windows.py::test_half_open_end` |
 | TRAP-11 | UTC日历归一 | 静默错算或证据丢失 | 以可复核规则显式处理 | `app/modules/windows/rules.py` | `tests/test_windows.py::test_utc_day_equivalence` |
+| TRAP-31 | 部分日期月初补齐洗白 | 静默错算或证据丢失 | 可能区间整体判定，跨窗待核阻断 | `app/modules/windows/rules.py` | `tests/test_partial.py::test_month_crossing_pending` |
+| TRAP-32 | 区间跨方案生效边界 | 静默错算或证据丢失 | 整区间须落在同一生效窗，否则隔离 | `app/modules/protocol/rules.py` | `tests/test_partial.py::test_straddle_protocol_quarantined` |
+| TRAP-33 | 冻结凭证丢失原精度 | 静默错算或证据丢失 | 凭证保留原始字符串与精度 | `app/archive.py` | `tests/test_partial.py::test_certificate_preserves_precision` |
+| TRAP-34 | 重跑区间漂移 | 静默错算或证据丢失 | 快照重算区间逐字段一致，替换失败保留旧版 | `app/main.py` | `tests/test_partial.py::test_rerun_intervals_stable` |
 
 ## 对账规则
 

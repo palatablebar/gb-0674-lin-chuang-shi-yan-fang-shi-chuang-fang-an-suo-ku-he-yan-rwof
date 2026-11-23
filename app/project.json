@@ -62,6 +62,13 @@
     "deviations": "偏离",
     "retest_issues": "复检问题",
     "blocked": "阻断项",
+    "pending": "待核",
+    "at_raw": "原始日期",
+    "at_end": "区间末刻",
+    "precision": "精度",
+    "day_low": "区间首日",
+    "day_high": "区间末日",
+    "reason": "阻断原因",
     "status": "状态"
   }
 }

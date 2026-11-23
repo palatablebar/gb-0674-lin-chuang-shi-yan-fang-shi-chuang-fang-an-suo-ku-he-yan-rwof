@@ -1,4 +1,4 @@
-from app.coerce import instant
+from app.coerce import span_of
 from collections import defaultdict
 
 def adjudicate(rows,context):
@@ -8,8 +8,9 @@ def adjudicate(rows,context):
         parent=by_id.get(row['parent'])
         if parent is None or parent['kind']!='PRIMARY' or any(parent[k]!=row[k] for k in ('subject','visit')):
             issues.append({'id':row['id'],'code':'RETEST_REFERENCE','parent':row['parent']});continue
-        hours=(instant(row['at'])-instant(parent['at'])).total_seconds()/3600
-        if not 0<hours<=context['retest_hours'] or row['revision']<=parent['revision']:
+        r_first,r_last=span_of(row);p_first,p_last=span_of(parent)
+        earliest=(r_first-p_last).total_seconds()/3600;latest=(r_last-p_first).total_seconds()/3600
+        if not 0<earliest or not latest<=context['retest_hours'] or row['revision']<=parent['revision']:
             issues.append({'id':row['id'],'code':'RETEST_WINDOW','parent':row['parent']});continue
         children[parent['id']].append(row)
     for row in rows:
@@ -20,7 +21,7 @@ def adjudicate(rows,context):
             if len(winners)>1:issues.append({'id':row['id'],'code':'RETEST_VERSION_CONFLICT','parent':row['id']});winner=row
             else:winner=winners[0]
         else:winner=row
-        selected.append({'id':winner['id'],'subject':row['subject'],'visit':row['visit'],'primary_id':row['id'],'value_mg_dl':winner['value_mg_dl'],'revision':winner['revision'],'code':'RETEST_SELECTED' if winner is not row else 'PRIMARY_SELECTED'})
+        selected.append({'id':winner['id'],'subject':row['subject'],'visit':row['visit'],'primary_id':row['id'],'value_mg_dl':winner['value_mg_dl'],'revision':winner['revision'],'at_raw':winner.get('at_raw',winner['at']),'precision':winner.get('precision','exact'),'code':'RETEST_SELECTED' if winner is not row else 'PRIMARY_SELECTED'})
     return selected,issues
 
 def apply(state):

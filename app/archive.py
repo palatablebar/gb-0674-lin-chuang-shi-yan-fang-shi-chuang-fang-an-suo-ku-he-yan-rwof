@@ -8,4 +8,5 @@ def serialize(result):
     with zipfile.ZipFile(buffer,'w',compression=zipfile.ZIP_DEFLATED) as archive:
         archive.writestr('manifest.json',json.dumps({**result['manifest'],'revision':result.get('revision',1),'status':result.get('status','待复核')},ensure_ascii=False,indent=2))
         archive.writestr('evidence.json',json.dumps({'counts':result['counts'],'views':result['views'],'quarantine':result['quarantine']},ensure_ascii=False,indent=2))
+        archive.writestr('certificate.json',json.dumps({'seal':result['archive']['seal'],'status':result['archive']['status'],'results':result['selected_results'],'windows':result['windows'],'deviations':result['deviations'],'pending':result.get('pending',[])},ensure_ascii=False,indent=2))
     return buffer.getvalue()
